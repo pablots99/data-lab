@@ -8,6 +8,8 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { ReactiveFormsModule } from '@angular/forms';
 import { environment } from 'src/environments/environment';
+import { CreatorComponent } from './creator/creator.component';
+import { VisualizerComponent } from './visualizer/visualizer.component';
 
 @NgModule({
   declarations: [AppComponent],
