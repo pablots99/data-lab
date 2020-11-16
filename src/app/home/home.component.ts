@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+
 
 @Component({
   selector: 'app-home',
@@ -10,7 +12,6 @@ import { Router } from '@angular/router';
   providers: [AuthService],
 })
 export class HomeComponent implements OnInit {
-  loginError: boolean;
   loginForm = new FormGroup({
     email: new FormControl(''),
     password: new FormControl(''),
@@ -21,22 +22,29 @@ export class HomeComponent implements OnInit {
 
   async onLogin() {
     const { email, password } = this.loginForm.value;
-    this.authSvc.login(email, password);
-    const user = await this.authSvc.getCurrentUser();
-    if (user) {
-      this.authSvc.updateUserData(user);
-      if (await this.authSvc.isUserAdmin(user.uid) == true) {
-        this.router.navigate(['../visualizer']);
-      } else {
-        this.router.navigate(['../creator']);
+    if(!email || !password)
+    {
+      Swal.fire('Oops...',"Rellene todos los campos", 'error');
+
+    }else
+    {
+        await this.authSvc.login(email, password).catch((er)=>{
+          Swal.fire('Oops...', er.message, 'error');
+        });
+        const user = await this.authSvc.getCurrentUser();
+        if (user) {
+          if (await this.authSvc.isUserAdmin(user.uid) == true) {
+            this.router.navigate(['../visualizer']);
+          } else {
+            this.router.navigate(['../creator']);
+          }
+          console.log('User->', user);
+        }
       }
-      console.log('User->', user);
-    } else {
-      this.loginError = true;
-    }
   }
-  change_value(){
-    if(this.loginError = true)
-      this.loginError = false;
+  loadRegister()
+  {
+    this.router.navigate(['../register']);
   }
+
 }

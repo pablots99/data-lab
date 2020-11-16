@@ -1,18 +1,16 @@
+import { componentFactoryName } from '@angular/compiler';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { CreatorComponent } from './creator/creator.component';
+import { HomeComponent } from './home/home.component';
+import { RegisterComponent } from './register/register.component';
 import { VisualizerComponent } from './visualizer/visualizer.component';
 
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/login',
-    pathMatch:  'full'
-  },
-  {
-    path: 'login',
-    loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
+    component: HomeComponent
   },
   {
     path: 'creator',
@@ -21,6 +19,10 @@ const routes: Routes = [
   {
     path: 'visualizer',
     component: VisualizerComponent
+  },
+  {
+    path: 'register',
+    component: RegisterComponent
   }
 ];
 
