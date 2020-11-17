@@ -9,4 +9,5 @@ export class Registros {
   operador: string;
   id_grupo: string;
   test: IHash;
+  leido: string;
 }

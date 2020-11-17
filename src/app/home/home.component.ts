@@ -34,11 +34,10 @@ export class HomeComponent implements OnInit {
         const user = await this.authSvc.getCurrentUser();
         if (user) {
           if (await this.authSvc.isUserAdmin(user.uid) == true) {
-            this.router.navigate(['../visualizer']);
+             this.router.navigate(['../visualizer']);
           } else {
             this.router.navigate(['../creator']);
           }
-          console.log('User->', user);
         }
       }
   }

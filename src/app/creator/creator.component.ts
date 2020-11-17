@@ -7,6 +7,7 @@ import { DatePipe } from '@angular/common';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { AuthService } from '../services/auth.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-creator',
@@ -56,17 +57,21 @@ export class CreatorComponent implements OnInit {
       coments: coment,
       operador: nombre_usuario,
       test: this.test_res,
+      leido: "false",
     };
     if (data.id && data.control_code) {
-      let iscc = await this.rgSvc.is_control_code(data.control_code);
-      let isid = await this.rgSvc.is_id(data.id);
+      let iscc = await this.rgSvc.is_control_code(data.control_code,data.id_grupo);
+      let isid = await this.rgSvc.is_id(data.id,data.id_grupo);
       if (iscc == true && isid == true) {
         Swal.fire('Oops...', 'Codigo de Control  y id ya registrados', 'error');
       } else if (iscc == true) {
         Swal.fire('Oops...', 'Codigo de Control ya registrado', 'error');
       } else if (isid == true) {
         Swal.fire('Oops...', 'Id ya registrado', 'error');
-      } else {
+      } else if(this.tests_add.length == 0) {
+        Swal.fire('Oops...', 'Introduce al menos un test ','error');
+      }
+      else {
         this.rgSvc
           .createRegistro(data)
           .then(() => {
@@ -85,8 +90,10 @@ export class CreatorComponent implements OnInit {
       );
     }
   }
-  deleteForm() {
-    this.tests = ['LumiraAg', 'Antigen', 'IGG', 'IGM'];
+  async deleteForm() {
+    this.tests =  await this.rgSvc.getTests(this.user_code);
+    this.test_res =  {};
+
     this.tests_add = [];
     this.pos_add = [];
     this.creatorForm = new FormGroup({
@@ -142,10 +149,18 @@ export class CreatorComponent implements OnInit {
     }
   }
   create_result(tipo, res) {
-    this.test_res[this.tests[tipo]] = res == 1 ? 'Positive' : 'Negative';
+    console.log('reeeees111', this.test_res);
+    this.test_res[this.tests[tipo]] = res == 1 ? 'POS' : 'NEG';
     console.log('reeeees', this.test_res);
     this.tests_add.push(this.tests[tipo]);
     this.pos_add.push(String(res));
     delete this.tests[tipo];
+  }
+  remove_test(tipo,i)
+  {
+    this.tests_add.splice(i,1);
+    this.pos_add.splice(i,1);
+    this.tests.push(tipo);
+    this.test_res[tipo] = null;
   }
 }
