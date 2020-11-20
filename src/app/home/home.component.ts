@@ -28,6 +28,12 @@ export class HomeComponent implements OnInit {
 
     }else
     {
+      Swal.fire({
+        title: 'Please Wait !',
+        imageUrl:"assets/loading.gif",
+        showConfirmButton: false,
+        allowOutsideClick: false,
+      });
         await this.authSvc.login(email, password).catch((er)=>{
           Swal.fire('Oops...', er.message, 'error');
         });
@@ -38,6 +44,7 @@ export class HomeComponent implements OnInit {
           } else {
             this.router.navigate(['../creator']);
           }
+          Swal.close();
         }
       }
   }

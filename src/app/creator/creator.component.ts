@@ -42,8 +42,14 @@ export class CreatorComponent implements OnInit {
     this.tests = await this.rgSvc.getTests(this.user_code);
   }
   async onSubmit() {
+    Swal.fire({
+      title: 'Please Wait !',
+      imageUrl:"assets/loading.gif",
+      showConfirmButton: false,
+      allowOutsideClick: false,
+    });
     let date = new Date();
-    let courrentDate = this.datepipe.transform(date, 'dd-MM-yyyy hh:mm');
+    let courrentDate = this.datepipe.transform(date, 'dd-MM-yyyy HH:mm:ss');
     let nombre_usuario: string;
     await this.authSv.get_user_name().then((res) => {
       nombre_usuario = res;
@@ -149,9 +155,7 @@ export class CreatorComponent implements OnInit {
     }
   }
   create_result(tipo, res) {
-    console.log('reeeees111', this.test_res);
     this.test_res[this.tests[tipo]] = res == 1 ? 'POS' : 'NEG';
-    console.log('reeeees', this.test_res);
     this.tests_add.push(this.tests[tipo]);
     this.pos_add.push(String(res));
     delete this.tests[tipo];

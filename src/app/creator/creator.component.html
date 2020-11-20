@@ -1,3 +1,4 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <a class="navbar-brand" >DataLabZero</a>
   <div style="margin-left: auto; margin-right: 0">
@@ -5,9 +6,9 @@
   </div>
 </nav>
 <div class="jumbotron" style="margin: 2%; margin-top: 5%">
-  <form [formGroup]="creatorForm" (ngSubmit)="onSubmit()">
+  <form onkeydown="return event.key != 'Enter';"[formGroup]="creatorForm" (ngSubmit)="onSubmit()">
     <fieldset>
-      <legend>Test Data</legend>
+      <legend>Formulario Test</legend>
       <div class="form-group">
         <label >ID Paciente:</label>
         <input

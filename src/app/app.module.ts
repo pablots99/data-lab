@@ -15,6 +15,7 @@ import { HomeComponent } from './home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RegisterComponent } from './register/register.component';
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { RegisterComponent } from './register/register.component';
     RegisterComponent,
   ],
   imports: [
+    InfiniteScrollModule,
     MatDialogModule,
     BrowserModule,
     AppRoutingModule,

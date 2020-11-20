@@ -1,23 +1,28 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentData, QueryDocumentSnapshot } from '@angular/fire/firestore';
 import { Subject } from 'rxjs';
 import { Registros } from 'src/app/models/registros.model';
-import { switchMap } from 'rxjs/operators';
+import { last, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RegistrosService {
   constructor(private firestore: AngularFirestore) {}
+  last:QueryDocumentSnapshot<DocumentData>;
 
-  async getRegistros(id_grupo) {
-    const query = this.firestore.collection('/registros', (ref) =>
+  async getRegistros(id_grupo,cond,leido) {
+    this.firestore.collection('/registros', (ref) =>
       ref.where('id_grupo', '==', id_grupo)
     );
+    const query = this.firestore.collection('/registros', (ref) =>
+    ref.where('leido', '==', leido).orderBy(cond).startAfter((this.last)?this.last:0).limit(20)
+  );
     return query
       .get()
       .toPromise()
       .then((res) => {
+         this.last = res.docs[res.docs.length-1];
         return res;
       });
   }
@@ -41,6 +46,23 @@ export class RegistrosService {
   }
   deleteRegistro(registroId: string) {
     this.firestore.doc('registros/' + registroId).delete();
+  }
+  async is_name(nombre){
+    let cond: boolean = false;
+
+    const query = this.firestore.collection('/registros', (ref) =>
+      ref.where('nombre', '==', nombre)
+    );
+    await query
+    .get()
+    .toPromise()
+    .then((res) => {
+      res.forEach((a) => {
+        if (a.exists) cond = true;
+      });
+    });
+  return cond;
+
   }
   async is_id(id, grupo) {
     let cond: boolean = false;

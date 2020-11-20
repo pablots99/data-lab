@@ -75,7 +75,7 @@ export class AuthService {
           var data = doc.data();
           name = data.nombre
         } else {
-          console.log('Noooooo');
+          console.log('');
         }
       })
       .catch(function (error) {
